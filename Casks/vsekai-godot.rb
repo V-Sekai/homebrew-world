@@ -14,7 +14,7 @@ cask "vsekai-godot" do
   # Removed livecheck stanza to resolve persistent installation errors.
   # This can be re-added later if needed with careful testing.
 
-  app "vsekai-godot-macos/vsekai-godot.app"
+  app "vsekai-godot-macos/godot_macos_editor_double.app"
 
   # Documentation: https://docs.brew.sh/Cask-Cookbook#stanza-zap
   zap trash: ""
