@@ -6,7 +6,9 @@ cask "vsekai-godot" do
   version "latest.v-sekai-editor-258"
   sha256 "d16dc2b57f363a7db552f20502714c30b226773446d6014a6cc01a568bfa7762"
 
-  url "https://github.com/V-Sekai/world-godot/releases/download/#{version}/v-sekai-godot-macos.zip"
+  url ("https://github.com/V-Sekai/world-godot/releases/download/#{version}/v-sekai-godot-macos.zip", {
+    extract_dir: "vsekai-godot-macos"
+  })
 
   name "vsekai-godot"
   desc "V-Sekai Godot Editor"
@@ -14,7 +16,7 @@ cask "vsekai-godot" do
 
   # Removed livecheck stanza to resolve persistent installation errors.
 
-  app "v-sekai-godot-macos/godot_macos_editor_double.app", target: "vsekai_godot.app"
+  app "godot_macos_editor_double.app", target: "vsekai-godot.app"
 
   # Documentation: https://docs.brew.sh/Cask-Cookbook#stanza-zap
   zap trash: ""
