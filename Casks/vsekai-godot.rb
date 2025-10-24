@@ -6,8 +6,7 @@ cask "vsekai-godot" do
   version "latest.v-sekai-editor-258"
   sha256 "d16dc2b57f363a7db552f20502714c30b226773446d6014a6cc01a568bfa7762"
 
-  url "https://github.com/V-Sekai/world-godot/releases/download/#{version}/v-sekai-godot-macos.zip",
-      extract_dir: "vsekai-godot-macos"
+  url "https://github.com/V-Sekai/world-godot/releases/download/#{version}/v-sekai-godot-macos.zip"
 
   name "vsekai-godot"
   desc "V-Sekai Godot Editor"
