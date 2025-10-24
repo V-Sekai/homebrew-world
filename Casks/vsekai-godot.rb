@@ -12,8 +12,8 @@ cask "vsekai-godot" do
 
   # Documentation: https://docs.brew.sh/Brew-Livecheck
   livecheck do
-    url ""
-    strategy ""
+    url "https://github.com/V-Sekai/world-godot/releases"
+    strategy :github_latest
   end
 
   depends_on macos: ""
