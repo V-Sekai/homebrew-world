@@ -16,8 +16,6 @@ cask "vsekai-godot" do
     strategy :github_latest
   end
 
-  depends_on macos: ""
-
   app ""
 
   # Documentation: https://docs.brew.sh/Cask-Cookbook#stanza-zap
