@@ -1,7 +1,6 @@
 # Documentation: https://docs.brew.sh/Formula-Cookbook
-# PLEASE REMOVE ALL GENERATED COMMENTS BEFORE SUBMITTING YOUR PULL REQUEST!
 
-class VsekaiGodotLinuxbsd < Formula
+class VsekaiGodot < Formula
   desc "V-Sekai Godot Editor for Linux/BSD"
   homepage "https://github.com/V-Sekai/world-godot"
   version "latest.v-sekai-editor-258"
