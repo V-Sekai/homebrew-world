@@ -1,56 +1,53 @@
-# Documentation: https://docs.brew.sh/Formula-Cookbook
-
 class VsekaiGodot < Formula
-  desc "V-Sekai Godot Editor for Linux/BSD"
+  desc "V-Sekai Godot Editor"
   homepage "https://github.com/V-Sekai/world-godot"
   version "latest.v-sekai-editor-258"
 
-  url "https://github.com/V-Sekai/world-godot/releases/download/#{version}/v-sekai-godot-linuxbsd.zip"
-  sha256 "c4a57cb50e001976572e45ee839d26fd5a4caeef94e86b98a96582700e96761d"
+  # macOS specific details
+  on_macos do
+    url "https://github.com/V-Sekai/world-godot/releases/download/#{version}/v-sekai-godot-macos.zip"
+    sha256 "d16dc2b57f363a7db552f20502714c30b226773446d6014a6cc01a568bfa7762"
+  end
 
-  # This formula assumes the zip contains the executable directly or in a predictable subfolder.
-  # The scoop-world definition used 'extract_dir: "v-sekai-godot-windows"'.
-  # We'll assume a similar structure for the Linux zip.
-  # If the actual zip structure differs, this may need adjustment.
+  # Linux specific details
+  on_linux do
+    url "https://github.com/V-Sekai/world-godot/releases/download/#{version}/v-sekai-godot-linuxbsd.zip"
+    sha256 "c4a57cb50e001976572e45ee839d26fd5a4caeef94e86b98a96582700e96761d"
+  end
+
+  license "MIT"
+
   def install
-    # Extract the zip to a temporary directory to process its contents.
-    # The extract_to_dir helper extracts the archive and returns the path to the extracted directory.
-    # It automatically handles common archive types like zip, tar.gz, etc.
-    zip_content_dir = extract_to_dir(cached_download_path)
+    if OS.mac?
+      # For macOS, extract the zip and then symlink the main executable from within the .app bundle.
+      system "unzip", "-q", cached_download_path, "-d", prefix
 
-    # The exact name of the directory containing the Godot binaries inside the zip needs to be confirmed.
-    # Based on the Windows scoop definition and common patterns, it might be named 'v-sekai-godot-linuxbsd'.
-    # We will install the contents of this assumed folder into the formula's installation prefix.
-    extracted_folder_name = "v-sekai-godot-linuxbsd"
+      # The executable is found at: vsekai-godot-macos/godot_macos_editor_double.app/Contents/MacOS/Godot
+      # We symlink this to the main bin directory as 'vsekai-godot'
+      bin.install_symlink prefix/"vsekai-godot-macos/godot_macos_editor_double.app/Contents/MacOS/Godot" => "vsekai-godot"
+    elsif OS.linux?
+      # For Linux, extract the zip and link the main executable.
+      system "unzip", "-q", cached_download_path, "-d", prefix
 
-    # Ensure the extracted folder exists before attempting to install its contents.
-    if Dir.exist?("#{zip_content_dir}/#{extracted_folder_name}")
-      prefix.install Dir["#{zip_content_dir}/#{extracted_folder_name}/*"]
-    else
-      # Fallback: if the zip doesn't contain a subfolder, install everything from the root of the extraction.
-      # This might occur if the archive contains files directly at its root.
-      prefix.install Dir["#{zip_content_dir}/*"]
-      extracted_folder_name = "." # Adjust for binary linking if needed
-    end
+      # Assume the executable is named 'godot' in a 'bin' subdirectory or at the root of the extracted archive.
+      executable_path = Dir[prefix/"bin/godot"].first || Dir[prefix/"godot"].first
 
-    # Link the executable(s).
-    # We need to find the actual executable name within the installed files.
-    # Common names like 'godot' or 'godot.editor.x86_64' are possibilities.
-    # We'll attempt to link any files marked as executable within the prefix.
-    # If a specific executable needs to be linked (e.g., to 'godot'), this part might need manual adjustment.
-    Dir[prefix/"*"].select { |f| File.executable?(f) }.each do |exec_path|
-      bin.install_symlink exec_path
+      if executable_path
+        bin.install_symlink executable_path => "vsekai-godot"
+      else
+        raise "Could not find the Linux executable in the archive. Please inspect the zip contents."
+      end
     end
   end
 
-  # Define how to check for new versions automatically.
-  livecheck do
-    url "https://github.com/V-Sekai/world-godot/releases"
-    strategy :github_latest
+  test do
+    # Test that the binary runs and outputs version. Assumes it's linked as 'vsekai-godot'.
+    # This test needs to work for both macOS and Linux executables.
+    if OS.mac?
+      assert_match "usage:", shell_output("#{bin}/vsekai-godot --help")
+    elsif OS.linux?
+      # Assume a binary named 'vsekai-godot' is available and executable.
+      assert_match "usage:", shell_output("#{bin}/vsekai-godot --help")
+    end
   end
-
-  # Define any files to trash on uninstall.
-  # If binaries are installed in specific subdirectories, this might need adjustment.
-  # The `prefix` variable points to the installation directory for the formula.
-  # zap_trash: [prefix] # Commented out as it could be too aggressive; usually more specific paths are preferred.
 end
