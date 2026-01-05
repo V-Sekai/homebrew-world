@@ -1,5 +1,5 @@
 cask "vsekai-godot-dev" do
-  version "latest.v-sekai-editor-269.1"
+  version "latest.v-sekai-editor-269.2"
   sha256 "f2ad16f1e63902d769bb6ac110d8dba9d131937610944aad393f1860d9e1e0c9"
 
   release_version = "latest.v-sekai-editor-269"
@@ -13,7 +13,7 @@ cask "vsekai-godot-dev" do
 
   postflight do
     # Download and install export templates
-    base_templates_dir = "#{Dir.home}/Library/Application Support/Godot Engine/editor_data/export_templates"
+    base_templates_dir = "#{Dir.home}/Library/Application Support/Godot/export_templates"
     FileUtils.mkdir_p base_templates_dir
     temp_dir = "#{base_templates_dir}/.tmp_#{release_version}"
     FileUtils.mkdir_p temp_dir
