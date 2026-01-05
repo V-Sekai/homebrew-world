@@ -1,5 +1,5 @@
 cask "vsekai-godot-dev" do
-  version "latest.v-sekai-editor-269.2"
+  version "latest.v-sekai-editor-269.3"
   sha256 "f2ad16f1e63902d769bb6ac110d8dba9d131937610944aad393f1860d9e1e0c9"
 
   release_version = "latest.v-sekai-editor-269"
@@ -59,14 +59,25 @@ cask "vsekai-godot-dev" do
       system_command "unzip", args: ["-o", templates_combined, "-d", extract_temp]
       system_command "unzip", args: ["-o", symbols_combined, "-d", extract_temp]
       
-      # Read version from version.txt
+      # Read version from version.txt in extracted templates
       version_file = Dir.glob("#{extract_temp}/**/version.txt").first
+      template_version = nil
       if version_file && File.exist?(version_file)
         template_version = File.read(version_file).strip
+        # Verify version.txt was read correctly and is not empty
+        if template_version.nil? || template_version.empty?
+          template_version = nil
+        else
+          # Use the version from version.txt (e.g., "4.6.beta.double")
+          # This is the actual Godot version, not the release tag
+        end
       end
       
-      # Use version from templates, fallback to release version
-      template_version ||= release_version
+      # If version.txt not found or invalid, we can't proceed without knowing the version
+      if template_version.nil?
+        raise "Could not determine template version from version.txt"
+      end
+      
       templates_dir = "#{base_templates_dir}/#{template_version}"
       FileUtils.mkdir_p templates_dir
       
@@ -75,6 +86,13 @@ cask "vsekai-godot-dev" do
         next if File.directory?(file)
         target_file = "#{templates_dir}/#{File.basename(file)}"
         FileUtils.mv file, target_file, force: true
+      end
+      
+      # Verify version.txt exists in templates_dir
+      version_txt_path = "#{templates_dir}/version.txt"
+      unless File.exist?(version_txt_path)
+        # If version.txt wasn't found, create it with the template_version
+        File.write(version_txt_path, template_version)
       end
     end
     
