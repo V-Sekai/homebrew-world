@@ -1,8 +1,9 @@
 cask "vsekai-godot-dev" do
-  version "latest.v-sekai-editor-269"
+  version "latest.v-sekai-editor-269.1"
   sha256 "f2ad16f1e63902d769bb6ac110d8dba9d131937610944aad393f1860d9e1e0c9"
 
-  url "https://github.com/V-Sekai/world-godot/releases/download/#{version}/v-sekai-godot-macos.zip"
+  release_version = "latest.v-sekai-editor-269"
+  url "https://github.com/V-Sekai/world-godot/releases/download/#{release_version}/v-sekai-godot-macos.zip"
 
   name "vsekai-godot"
   desc "V-Sekai Godot Editor"
@@ -14,11 +15,11 @@ cask "vsekai-godot-dev" do
     # Download and install export templates
     base_templates_dir = "#{Dir.home}/Library/Application Support/Godot Engine/editor_data/export_templates"
     FileUtils.mkdir_p base_templates_dir
-    temp_dir = "#{base_templates_dir}/.tmp_#{version}"
+    temp_dir = "#{base_templates_dir}/.tmp_#{release_version}"
     FileUtils.mkdir_p temp_dir
 
     # Download template files
-    templates_url = "https://github.com/V-Sekai/world-godot/releases/download/#{version}/v-sekai-godot-templates.zip.001"
+    templates_url = "https://github.com/V-Sekai/world-godot/releases/download/#{release_version}/v-sekai-godot-templates.zip.001"
     templates_sha256 = "7044f0035d6de1ae48a2b9ee9e764c7f72deef837612e9dfd35a8f4203be0084"
     templates_file_001 = "#{temp_dir}/v-sekai-godot-templates.zip.001"
     
@@ -26,11 +27,11 @@ cask "vsekai-godot-dev" do
     system_command "shasum", args: ["-a", "256", "-c", "-"], input: "#{templates_sha256}  #{templates_file_001}"
 
     # Download symbols template files (split zip)
-    symbols_url_001 = "https://github.com/V-Sekai/world-godot/releases/download/#{version}/v-sekai-godot-templates-symbols.zip.001"
+    symbols_url_001 = "https://github.com/V-Sekai/world-godot/releases/download/#{release_version}/v-sekai-godot-templates-symbols.zip.001"
     symbols_sha256_001 = "48ce46e4b16b64d26730854e3a2ead23f9c8ac9e5948d3b7d5c86ad69bc8610a"
     symbols_file_001 = "#{temp_dir}/v-sekai-godot-templates-symbols.zip.001"
     
-    symbols_url_002 = "https://github.com/V-Sekai/world-godot/releases/download/#{version}/v-sekai-godot-templates-symbols.zip.002"
+    symbols_url_002 = "https://github.com/V-Sekai/world-godot/releases/download/#{release_version}/v-sekai-godot-templates-symbols.zip.002"
     symbols_sha256_002 = "3e21fd591e2e9d8a07edcea6504b4f377f91aa212cb72955b3f2ac37454b75a9"
     symbols_file_002 = "#{temp_dir}/v-sekai-godot-templates-symbols.zip.002"
     
@@ -43,12 +44,14 @@ cask "vsekai-godot-dev" do
     # Combine split zip files and extract templates
     template_version = nil
     Dir.chdir(temp_dir) do
-      # Combine split zip files using zip command
+      # Combine split zip files using cat (for split zips created with zip -s)
       templates_combined = "#{temp_dir}/v-sekai-godot-templates.zip"
-      system_command "zip", args: ["-F", templates_file_001, "--out", templates_combined]
+      # Templates zip might be a single file or already complete
+      FileUtils.cp templates_file_001, templates_combined
       
       symbols_combined = "#{temp_dir}/v-sekai-godot-templates-symbols.zip"
-      system_command "zip", args: ["-F", symbols_file_001, "--out", symbols_combined]
+      # Combine split symbols zip files using cat
+      system_command "sh", args: ["-c", "cat '#{symbols_file_001}' '#{symbols_file_002}' > '#{symbols_combined}'"]
       
       # Extract to temp location first
       extract_temp = "#{temp_dir}/extract"
@@ -63,7 +66,7 @@ cask "vsekai-godot-dev" do
       end
       
       # Use version from templates, fallback to release version
-      template_version ||= version
+      template_version ||= release_version
       templates_dir = "#{base_templates_dir}/#{template_version}"
       FileUtils.mkdir_p templates_dir
       
