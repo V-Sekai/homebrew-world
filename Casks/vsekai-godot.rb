@@ -1,5 +1,5 @@
 cask "vsekai-godot" do
-  version "latest.v-sekai-editor-270.3"
+  version "latest.v-sekai-editor-270.4"
   sha256 "ba27caf86eef62ee7b27cda55c7d1fefdd942fdd531cf6a88fa90e984a0d3ada"
 
   release_version = "latest.v-sekai-editor-270"
@@ -57,6 +57,12 @@ cask "vsekai-godot" do
       FileUtils.mkdir_p extract_temp
       system_command "unzip", args: ["-o", templates_combined, "-d", extract_temp]
       system_command "unzip", args: ["-o", symbols_combined, "-d", extract_temp]
+
+      # Unzip the .tpz file if present (new format)
+      tpz_file = Dir.glob("#{extract_temp}/**/*.tpz").first
+      if tpz_file
+        system_command "unzip", args: ["-o", tpz_file, "-d", extract_temp]
+      end
 
       # Read version from version.txt in extracted templates
       version_file = Dir.glob("#{extract_temp}/**/version.txt").first
