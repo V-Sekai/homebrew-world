@@ -9,13 +9,13 @@ To install the V-Sekai Godot Editor using Homebrew, follow these steps:
 1.  **Tap the repository:**
 
     ```bash
-    brew tap V-Sekai/world
+    brew tap V-Sekai/homebrew-world
     ```
 
 2.  **Install the vsekai-godot package:**
     This single command will install the correct version for your operating system (macOS or Linux).
     ```bash
-    brew install vsekai-godot
+    brew install v-sekai-godot
     ```
 
 ## Official Project Documentation
