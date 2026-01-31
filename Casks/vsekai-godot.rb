@@ -1,8 +1,8 @@
 cask "vsekai-godot" do
-  version "latest.v-sekai-editor-275.0"
-  sha256 "4209569544cc194e28724393c28623c1ea3de3e9cde6838f7696e6b32fee41d4"
+  version "latest.v-sekai-editor-279.0"
+  sha256 "ae73279fbf4dc3e55ebc5b03d8a4d5106924bbed88213ed284f6e34f397bc7dd"
 
-  release_version = "latest.v-sekai-editor-275"
+  release_version = "latest.v-sekai-editor-279"
   url "https://github.com/V-Sekai/world-godot/releases/download/#{release_version}/v-sekai-godot-macos.zip"
   name "vsekai-godot"
   desc "V-Sekai Godot Editor"
@@ -19,7 +19,7 @@ cask "vsekai-godot" do
 
     # Download template files
     templates_url = "https://github.com/V-Sekai/world-godot/releases/download/#{release_version}/v-sekai-godot-templates.zip.001"
-    templates_sha256 = "BCD56C94B7B8E808DDEA642AE1BC570ED4F091C3F3470215F33E885053F3DCF2"
+    templates_sha256 = "BFD7A64A0E1F477F642A90C111AF73425AB172F7C40ABE5109935B6C73904C79"
     templates_file_001 = "#{temp_dir}/v-sekai-godot-templates.zip.001"
 
     system_command "curl", args: ["-L", "-o", templates_file_001, templates_url]
@@ -27,11 +27,11 @@ cask "vsekai-godot" do
 
     # Download symbols template files (split zip)
     symbols_url_001 = "https://github.com/V-Sekai/world-godot/releases/download/#{release_version}/v-sekai-godot-templates-symbols.zip.001"
-    symbols_sha256_001 = "548E0E8BDF3F8D3772C006720390974B5DAAE47B2586CF8088364814C89A70C2"
+    symbols_sha256_001 = "E3FC838F3F8A8520EE2346FBE417F85F748699A0B38F062E4881FB2003BAE5CA"
     symbols_file_001 = "#{temp_dir}/v-sekai-godot-templates-symbols.zip.001"
 
     symbols_url_002 = "https://github.com/V-Sekai/world-godot/releases/download/#{release_version}/v-sekai-godot-templates-symbols.zip.002"
-    symbols_sha256_002 = "F658C0537E311B2C477DF0B14C6CF205405698FD186B192D3D4FEC0B6E81B7F7"
+    symbols_sha256_002 = "5DF25D79D4C862E314C9E78101A2489F88DEEC733FE76C546EB2DDC151CBBD37"
     symbols_file_002 = "#{temp_dir}/v-sekai-godot-templates-symbols.zip.002"
 
     system_command "curl", args: ["-L", "-o", symbols_file_001, symbols_url_001]
