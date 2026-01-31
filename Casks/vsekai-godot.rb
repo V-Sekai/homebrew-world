@@ -1,14 +1,14 @@
 cask "vsekai-godot" do
-  version "latest.v-sekai-editor-279.0"
+  version "latest.v-sekai-editor-279.1"
   sha256 "ae73279fbf4dc3e55ebc5b03d8a4d5106924bbed88213ed284f6e34f397bc7dd"
 
   release_version = "latest.v-sekai-editor-279"
   url "https://github.com/V-Sekai/world-godot/releases/download/#{release_version}/v-sekai-godot-macos.zip"
-  name "vsekai-godot"
+  name "v-sekai-godot"
   desc "V-Sekai Godot Editor"
   homepage "https://github.com/V-Sekai/world-godot"
 
-  app "v-sekai-godot-macos/godot_macos_editor_double.app", target: "vsekai_godot.app"
+  app "v-sekai-godot-macos/godot_macos_editor_double.app", target: "v-sekai-godot.app"
 
   postflight do
     # Download and install export templates
