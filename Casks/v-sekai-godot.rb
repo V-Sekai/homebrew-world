@@ -1,5 +1,5 @@
 cask "v-sekai-godot" do
-  version "latest.v-sekai-editor-279.2"
+  version "latest.v-sekai-editor-279.3"
   sha256 "ae73279fbf4dc3e55ebc5b03d8a4d5106924bbed88213ed284f6e34f397bc7dd"
 
   release_version = "latest.v-sekai-editor-279"
