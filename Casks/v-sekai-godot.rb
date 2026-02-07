@@ -1,8 +1,8 @@
 cask "v-sekai-godot" do
-  version "latest.v-sekai-editor-280"
-  sha256 "41810ab496c42cb2798dddfab6d6dc099cd5fea8a270e74b5c45f33f4e8605ac"
+  version "latest.v-sekai-editor-281"
+  sha256 "c6634675cdb0b130b2be07bd402b874245eaa7b9eef6b06aa63b85f18c1d298c"
 
-  release_version = "latest.v-sekai-editor-280"
+  release_version = "latest.v-sekai-editor-281"
   url "https://github.com/V-Sekai/world-godot/releases/download/#{release_version}/v-sekai-godot-macos.zip"
   name "v-sekai-godot"
   desc "V-Sekai Godot Editor"
@@ -19,44 +19,23 @@ cask "v-sekai-godot" do
 
     # Download template files
     templates_url = "https://github.com/V-Sekai/world-godot/releases/download/#{release_version}/v-sekai-godot-templates.zip.001"
-    templates_sha256 = "BFD7A64A0E1F477F642A90C111AF73425AB172F7C40ABE5109935B6C73904C79"
+    templates_sha256 = "337D27752304822843842BB95356D59831841430DCB444CF601CFA782171FA9D"
     templates_file_001 = "#{temp_dir}/v-sekai-godot-templates.zip.001"
 
     system_command "curl", args: ["-L", "-o", templates_file_001, templates_url]
     system_command "shasum", args: ["-a", "256", "-c", "-"], input: "#{templates_sha256}  #{templates_file_001}"
 
-    # Download symbols template files (split zip)
-    symbols_url_001 = "https://github.com/V-Sekai/world-godot/releases/download/#{release_version}/v-sekai-godot-templates-symbols.zip.001"
-    symbols_sha256_001 = "E3FC838F3F8A8520EE2346FBE417F85F748699A0B38F062E4881FB2003BAE5CA"
-    symbols_file_001 = "#{temp_dir}/v-sekai-godot-templates-symbols.zip.001"
-
-    symbols_url_002 = "https://github.com/V-Sekai/world-godot/releases/download/#{release_version}/v-sekai-godot-templates-symbols.zip.002"
-    symbols_sha256_002 = "5DF25D79D4C862E314C9E78101A2489F88DEEC733FE76C546EB2DDC151CBBD37"
-    symbols_file_002 = "#{temp_dir}/v-sekai-godot-templates-symbols.zip.002"
-
-    system_command "curl", args: ["-L", "-o", symbols_file_001, symbols_url_001]
-    system_command "shasum", args: ["-a", "256", "-c", "-"], input: "#{symbols_sha256_001}  #{symbols_file_001}"
-
-    system_command "curl", args: ["-L", "-o", symbols_file_002, symbols_url_002]
-    system_command "shasum", args: ["-a", "256", "-c", "-"], input: "#{symbols_sha256_002}  #{symbols_file_002}"
-
     # Combine split zip files and extract templates
     template_version = nil
     Dir.chdir(temp_dir) do
-      # Combine split zip files using cat (for split zips created with zip -s)
-      templates_combined = "#{temp_dir}/v-sekai-godot-templates.zip"
       # Templates zip might be a single file or already complete
+      templates_combined = "#{temp_dir}/v-sekai-godot-templates.zip"
       FileUtils.cp templates_file_001, templates_combined
-
-      symbols_combined = "#{temp_dir}/v-sekai-godot-templates-symbols.zip"
-      # Combine split symbols zip files using cat
-      system_command "sh", args: ["-c", "cat '#{symbols_file_001}' '#{symbols_file_002}' > '#{symbols_combined}'"]
 
       # Extract to temp location first
       extract_temp = "#{temp_dir}/extract"
       FileUtils.mkdir_p extract_temp
       system_command "unzip", args: ["-o", templates_combined, "-d", extract_temp]
-      system_command "unzip", args: ["-o", symbols_combined, "-d", extract_temp]
 
       # Unzip the .tpz file if present (new format)
       tpz_file = Dir.glob("#{extract_temp}/**/*.tpz").first
